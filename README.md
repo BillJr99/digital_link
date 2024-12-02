@@ -60,10 +60,10 @@ Assuming you used `A` to start the `autopatch` and for the `exten` rules above, 
 *AA <mode digit> <master> <optional TG> <optional D key>
 ```
 
-* **<mode digit>:** The mode digit is the first digit in `switch_modes.conf` that corresponds to the `modemaster` of the master and/or talkgroup you wish to connect to.  For example, DMR corresponds to `1`, and D-STAR corresponds to `2` in the template provided by `switch_modes.conf`.
-* **<master>:** The master digit is the second digit in `switch_modes.conf` that corresponds to the `modemaster` of the master and/or talkgorup you wish to connect to.  For example, Brandmeister corresponds to `1` and TGIF corresponds to `2` for DMR, and REF corresponds to `1` and XLX corresponds to `2` for D-STAR.  
-* **<TG>:** The talkgroup you wish to connect to; for example, 9999.  This can be omitted if there is no specific talkgroup on the master being connected to (i.e., when using YSF).  On D-STAR, this is the numeric component, so to connect to `REF030C`, one would press the digit corresponding to `REF` for the `<master>` digit previously, and then enter `030C`.
-* **<optional D key>:** Sending the `D` DTMF tone at the end of the command indicates that a private call should be made on DMR, or to link to the `Echo` repeater on D-STAR.  This is translated to a `#` character and passed to DVSwitch as either a escaped `#` character, or as the `E` echo tone on D-STAR, as appropriate.
+* `<mode digit>`: The mode digit is the first digit in `switch_modes.conf` that corresponds to the `modemaster` of the master and/or talkgroup you wish to connect to.  For example, DMR corresponds to `1`, and D-STAR corresponds to `2` in the template provided by `switch_modes.conf`.
+* `<master>`: The master digit is the second digit in `switch_modes.conf` that corresponds to the `modemaster` of the master and/or talkgorup you wish to connect to.  For example, Brandmeister corresponds to `1` and TGIF corresponds to `2` for DMR, and REF corresponds to `1` and XLX corresponds to `2` for D-STAR.  
+* `<TG>`: The talkgroup you wish to connect to; for example, 9999.  This can be omitted if there is no specific talkgroup on the master being connected to (i.e., when using YSF).  On D-STAR, this is the numeric component, so to connect to `REF030C`, one would press the digit corresponding to `REF` for the `<master>` digit previously, and then enter `030C`.
+* `<optional D key>`: Sending the `D` DTMF tone at the end of the command indicates that a private call should be made on DMR, or to link to the `Echo` repeater on D-STAR.  This is translated to a `#` character and passed to DVSwitch as either a escaped `#` character, or as the `E` echo tone on D-STAR, as appropriate.
 
 ### Linking
 
