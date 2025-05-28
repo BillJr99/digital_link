@@ -160,15 +160,15 @@ if [[ "$MODE" == "D-STAR" ]]; then
 fi
 
 if [[ "$MODE" == "DMR" && "${TG: -1}" == "D" ]]; then
-    TG="${TG%?}#" # Transform 'D' suffix on TG to '#' for DMR mode
+    TG="${TG%?}#" # Transform 'D' suffix on TG to '#' for DMR mode which may need to be escaped
 fi
 
 case $MODE in
     DMR)
         ${DVSWITCH_APP} mode DMR
         echo Executing: ${DVSWITCH_APP} mode DMR
-        ${DVSWITCH_APP} tune ${PASSWORD}@${URL}:${PORT}\!${TG}
-        echo Executing: ${DVSWITCH_APP} tune ${PASSWORD}@${URL}:${PORT}\\\!${TG}
+        ${DVSWITCH_APP} tune "${PASSWORD}@${URL}:${PORT}!${TG}"
+        echo Executing: ${DVSWITCH_APP} tune "${PASSWORD}@${URL}:${PORT}!${TG}"
         ;;
     D-STAR)
         ${DVSWITCH_APP} mode DSTAR
