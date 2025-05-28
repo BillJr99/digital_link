@@ -159,6 +159,12 @@ if [[ "$MODE" == "D-STAR" ]]; then
     TG="${TYPE}${TG}L"  # Always prepend $TYPE (REF, XLX, ...) and append L for D-STAR
 fi
 
+if [[ "$MODE" == "DMR" && "${TG: -1}" == "D" ]]; then
+    TG="${TG%?}#" # Transform 'D' suffix on TG to '#' for DMR mode
+    echo "Modified TG for DMR: ${TG}"
+    echo "$(date): Modified TG suffix 'D' to '#' for DMR" >> $LOG_FILE
+fi
+
 case $MODE in
     DMR)
         ${DVSWITCH_APP} mode DMR

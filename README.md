@@ -75,7 +75,7 @@ These examples assume the stock configuration in `digital_link.sh`, with spaces 
 
 * Connect to REF030C on D-STAR: `*AA 21 030C`
 * Connect to REF001E on D-STAR: `*AA 21 001D`
-* Connect to 9990 (Private call) on DMR Brandmeister: `*AA 11 9990*`
+* Connect to 9990 (Private call) on DMR Brandmeister: `*AA 11 9990D`
 * Connect to TG 91 on DMR Brandmeister: `*AA 11 91`
 * Connect to Parrot on YSF: `*AA 31`
 * Connect to AmericaLink on YSF: `*AA 32`
