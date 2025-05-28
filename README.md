@@ -42,7 +42,7 @@ Modify `extensions.conf` by adding the following stanza (again, replace `_A.` wi
 
 ```
 [digital_link]
-exten => _A.,n(normal),System(/opt/digital_link/digital_link.sh ${EXTEN})
+exten => _A.,1,System(/opt/digital_link/digital_link.sh ${EXTEN})
 exten => _A.,n,Hangup
 ```
 
