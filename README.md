@@ -42,12 +42,6 @@ Modify `extensions.conf` by adding the following stanza (again, replace `_A.` wi
 
 ```
 [digital_link]
-; Match extensions explicitly ending with D
-exten => _A.,1,GotoIf($["${EXTEN:-1}"="D"]?ends_with_D:normal)
-; If it ends with D, replace the last character with #
-exten => _A.,n(ends_with_D),System(/opt/digital_link/digital_link.sh ${EXTEN:0:-1}#)
-exten => _A.,n,Hangup
-; If it does not end with D, process normally
 exten => _A.,n(normal),System(/opt/digital_link/digital_link.sh ${EXTEN})
 exten => _A.,n,Hangup
 ```

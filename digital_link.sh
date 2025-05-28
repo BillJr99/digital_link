@@ -16,7 +16,7 @@ DTMF=${DTMF:1} # remove the initial digit to Asterisk
 DTMF=${DTMF//\*/\#} # replace * with # for parsing purposes
 
 # Validate input
-if [[ -z "$DTMF" || ${#DTMF} -lt 2 ]]; then
+if [[ -z "$DTMF" ]]; then
     echo "Invalid DTMF command. Exiting."
     echo "$(date): Invalid DTMF command ${DTMF}" >> $LOG_FILE
     exit 1
@@ -153,16 +153,14 @@ unlink_current_mode
 echo "Switching to mode $MODE, MASTER=${MASTER}, TG: $TG, URL: $URL, PORT: $PORT, PASSWORD: $PASSWORD, TYPE: $TYPE"
 
 if [[ "$MODE" == "D-STAR" ]]; then
-    if [[ "${TG: -1}" == "#" ]]; then
-        TG="${TG%#}E"  # Remove the last character (#) and append E
+    if [[ "${TG: -1}" == "D" ]]; then
+        TG="${TG%#}E"  # Remove the last character (D) and append E
     fi
     TG="${TYPE}${TG}L"  # Always prepend $TYPE (REF, XLX, ...) and append L for D-STAR
 fi
 
 if [[ "$MODE" == "DMR" && "${TG: -1}" == "D" ]]; then
     TG="${TG%?}#" # Transform 'D' suffix on TG to '#' for DMR mode
-    echo "Modified TG for DMR: ${TG}"
-    echo "$(date): Modified TG suffix 'D' to '#' for DMR" >> $LOG_FILE
 fi
 
 case $MODE in
