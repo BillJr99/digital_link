@@ -1,6 +1,8 @@
 #!/bin/bash
 # Run as asterisk or root
 
+set +H  # Disable Bash history expansion (! operator)
+
 # Node configuration
 NODE_ID=62933          # Allstar node number
 LINKED_NODE_ID=1999    # Target private node to be linked
