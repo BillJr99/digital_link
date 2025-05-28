@@ -55,6 +55,7 @@ unlink_current_mode() {
             ;;
         *)
             echo "WARNING: Unable to unlink unsupported mode: $current_mode"
+            echo "WARNING: Unable to unlink unsupported mode: $current_mode" >> $LOG_FILE
             ;;
     esac
 
@@ -65,6 +66,7 @@ unlink_current_mode() {
 # Disconnect and Unlink only when MODE and MASTER are both 0
 if [[ "$MODE_DIGIT" == "0" && "$MASTER" == "0" ]]; then
     echo "Disconnecting node $NODE_ID from AllStarLink..."
+    echo "Disconnecting node $NODE_ID from AllStarLink..." >> $LOG_FILE
 
     # Unlink current mode
     unlink_current_mode   
@@ -95,10 +97,12 @@ fi
 CURRENT_CONNECTION=$(asterisk -rx "rpt lstats $NODE_ID" | grep "ESTABLISHED")
 if [[ -n "$CURRENT_CONNECTION" && "$CURRENT_CONNECTION" != *"$LINKED_NODE_ID"* ]]; then
     echo "Disconnecting from other nodes..."
+    echo "Disconnecting from other nodes..." >> $LOG_FILE
     asterisk -rx "rpt cmd $NODE_ID ilink 6 1"
 fi
 if [[ "$CURRENT_CONNECTION" != *"$LINKED_NODE_ID"* ]]; then
     echo "Connecting node $NODE_ID to $LINKED_NODE_ID..."
+    echo "Connecting node $NODE_ID to $LINKED_NODE_ID..." >> $LOG_FILE
     asterisk -rx "rpt fun $NODE_ID *3$LINKED_NODE_ID"
     sleep 2
 fi
@@ -112,6 +116,7 @@ SECTION=$(awk -v modemaster="${MODE_DIGIT}${MASTER}" '
 
 if [[ -z "$SECTION" ]]; then
     echo "No matching configuration for MASTER=${MASTER}. Exiting."
+    echo "No matching configuration for MASTER=${MASTER}. Exiting." >> $LOG_FILE
     exit 1
 fi
 
@@ -167,35 +172,46 @@ case $MODE in
     DMR)
         ${DVSWITCH_APP} mode DMR
         echo Executing: ${DVSWITCH_APP} mode DMR
+        echo Executing: ${DVSWITCH_APP} mode DMR >> $LOG_FILE 
         ${DVSWITCH_APP} tune "${PASSWORD}@${URL}:${PORT}!${TG}"
         echo Executing: ${DVSWITCH_APP} tune "${PASSWORD}@${URL}:${PORT}!${TG}"
+        echo Executing: ${DVSWITCH_APP} tune "${PASSWORD}@${URL}:${PORT}!${TG}" >> $LOG_FILE 
         ;;
     D-STAR)
         ${DVSWITCH_APP} mode DSTAR
-        echo Executing: ${DVSWITCH_APP} mode DSTAR
-        ${DVSWITCH_APP} tune ${TG}
-        echo Executing: ${DVSWITCH_APP} tune ${TG}
+        echo Executing: ${DVSWITCH_APP} mode DSTAR >> $LOG_FILE 
+        echo Executing: ${DVSWITCH_APP} mode DSTAR 
+        ${DVSWITCH_APP} tune "${TG}"
+        echo Executing: ${DVSWITCH_APP} tune "${TG}" >> $LOG_FILE 
+        echo Executing: ${DVSWITCH_APP} tune "${TG}" 
         ;;
     YSF)
         ${DVSWITCH_APP} mode YSF
-        echo Executing: ${DVSWITCH_APP} mode YSF
-        ${DVSWITCH_APP} tune ${URL}:${PORT}
-        echo Executing: ${DVSWITCH_APP} tune ${URL}:${PORT}
+        echo Executing: ${DVSWITCH_APP} mode YSF >> $LOG_FILE 
+        echo Executing: ${DVSWITCH_APP} mode YSF 
+        ${DVSWITCH_APP} tune "${URL}:${PORT}"
+        echo Executing: ${DVSWITCH_APP} tune "${URL}:${PORT}" >> $LOG_FILE 
+        echo Executing: ${DVSWITCH_APP} tune "${URL}:${PORT}" 
         ;;
     NXDN)
         ${DVSWITCH_APP} mode NXDN
+        echo Executing: ${DVSWITCH_APP} mode NXDN >> $LOG_FILE
         echo Executing: ${DVSWITCH_APP} mode NXDN
-        ${DVSWITCH_APP} tune ${TG}
-        echo Executing: ${DVSWITCH_APP} tune ${TG}
+        ${DVSWITCH_APP} tune "${TG}"
+        echo Executing: ${DVSWITCH_APP} tune "${TG}" >> $LOG_FILE
+        echo Executing: ${DVSWITCH_APP} tune "${TG}"
         ;;
     P25)
         ${DVSWITCH_APP} mode P25
+        echo Executing: ${DVSWITCH_APP} mode P25 >> $LOG_FILE 
         echo Executing: ${DVSWITCH_APP} mode P25
-        ${DVSWITCH_APP} tune ${TG}
-        echo Executing: ${DVSWITCH_APP} tune ${TG}
+        ${DVSWITCH_APP} tune "${TG}"
+        echo Executing: ${DVSWITCH_APP} tune "${TG}" >> $LOG_FILE 
+        echo Executing: ${DVSWITCH_APP} tune "${TG}"
         ;;        
     *)
         echo "Unsupported mode: $MODE"
+        echo "Unsupported mode: $MODE" >> $LOG_FILE 
         exit 1
         ;;
 esac
