@@ -43,7 +43,7 @@ TG=${DTMF:2}             # Remaining digits (talkgroup ID)
 
 unlink_current_mode() {
     # Constants — scalar or array allowed
-    DMR_UNLINK=(4000 disconnect)  
+    DMR_UNLINK=('4000#' disconnect)  
     DSTAR_UNLINK=U
     YSF_UNLINK=4000
     NXDN_UNLINK=9999
@@ -61,6 +61,7 @@ unlink_current_mode() {
             # It's an array, loop over values
             for val in "${ref[@]}"; do
                 ${DVSWITCH_APP} tune "$val"
+                sleep 1
             done
         else
             # Not an array, treat as scalar
