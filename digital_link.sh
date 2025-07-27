@@ -43,7 +43,7 @@ TG=${DTMF:2}             # Remaining digits (talkgroup ID)
 
 unlink_current_mode() {
     # Constants
-    DMR_UNLINK=disconnect
+    DMR_UNLINK=4000
     DSTAR_UNLINK=U
     YSF_UNLINK=4000
     NXDN_UNLINK=9999
