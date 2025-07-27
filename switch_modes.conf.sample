@@ -1,3 +1,7 @@
+[NodeInfo]
+NODE_ID=12345
+LINKED_NODE_ID=1999
+
 [DMR_BrandMeister]
 modemaster=11
 mode=DMR

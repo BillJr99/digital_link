@@ -4,13 +4,26 @@
 set +H  # Disable Bash history expansion (! operator)
 
 # Node configuration
-NODE_ID=62933          # Allstar node number
-LINKED_NODE_ID=1999    # Target private node to be linked
 CONFIG_FILE="/opt/digital_link/switch_modes.conf"
 LOG_FILE="/opt/digital_link/dvswitch_links.log"
 DVSWITCH_APP="/opt/MMDVM_Bridge/dvswitch.sh"
 
 echo "$(date): Executing with $1" >> $LOG_FILE
+
+# Extract NODE_ID and LINKED_NODE_ID from [NodeInfo] section
+NODE_ID=$(awk '
+    /^\[NodeInfo\]/ { in_section=1; next }
+    /^\[.*\]/ { in_section=0 }
+    in_section && $1 ~ /^NODE_ID=/ { split($0,a,"="); print a[2]; exit }
+' "$CONFIG_FILE")
+
+LINKED_NODE_ID=$(awk '
+    /^\[NodeInfo\]/ { in_section=1; next }
+    /^\[.*\]/ { in_section=0 }
+    in_section && $1 ~ /^LINKED_NODE_ID=/ { split($0,a,"="); print a[2]; exit }
+' "$CONFIG_FILE")
+
+echo "$(date): Node ID ${NODE_ID}, Linked Node ID ${LINKED_NODE_ID}" >> $LOG_FILE
 
 # Input DTMF string
 DTMF=$1
@@ -175,9 +188,12 @@ case $MODE in
         ${DVSWITCH_APP} mode DMR
         echo Executing: ${DVSWITCH_APP} mode DMR
         echo Executing: ${DVSWITCH_APP} mode DMR >> $LOG_FILE 
-        ${DVSWITCH_APP} tune "${PASSWORD}@${URL}:${PORT}!${TG}"
-        echo Executing: ${DVSWITCH_APP} tune "${PASSWORD}@${URL}:${PORT}!${TG}"
-        echo Executing: ${DVSWITCH_APP} tune "${PASSWORD}@${URL}:${PORT}!${TG}" >> $LOG_FILE 
+        ${DVSWITCH_APP} tune "${PASSWORD}@${URL}:${PORT}" # Optionally, !${TG}, but this does not support private calls
+        echo Executing: ${DVSWITCH_APP} tune "${PASSWORD}@${URL}:${PORT}"
+        echo Executing: ${DVSWITCH_APP} tune "${PASSWORD}@${URL}:${PORT}" >> $LOG_FILE 
+        ${DVSWITCH_APP} tune "${TG}" 
+        echo Executing: ${DVSWITCH_APP} tune "${TG}"
+        echo Executing: ${DVSWITCH_APP} tune "${TG}" >> $LOG_FILE         
         ;;
     D-STAR)
         ${DVSWITCH_APP} mode DSTAR
