@@ -73,6 +73,8 @@ unlink_current_mode() {
             echo "WARNING: Unable to unlink unsupported mode: $current_mode" >> $LOG_FILE
             ;;
     esac
+    
+    ${DVSWITCH_APP} tune disconnect
 
     echo Unlinked on mode $current_mode
     echo "$(date): Unlinked on mode $current_mode" >> $LOG_FILE
