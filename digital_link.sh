@@ -42,40 +42,58 @@ MASTER=${DTMF:1:1}       # Second digit (master)
 TG=${DTMF:2}             # Remaining digits (talkgroup ID)
 
 unlink_current_mode() {
-    # Constants
-    DMR_UNLINK=4000
+    # Constants — scalar or array allowed
+    DMR_UNLINK=(4000 disconnect)  
     DSTAR_UNLINK=U
     YSF_UNLINK=4000
     NXDN_UNLINK=9999
     P25_UNLINK=9999
 
-    # Unlink current mode
+    # Determine current mode
     local current_mode=$(${DVSWITCH_APP} mode)
 
+    # Helper function to tune on either a string or array
+    tune_on_values() {
+        local varname=$1
+        declare -n ref=$varname   # Nameref to allow dynamic referencing of variable
+
+        if declare -p "$varname" 2>/dev/null | grep -q 'declare \-a'; then
+            # It's an array, loop over values
+            for val in "${ref[@]}"; do
+                ${DVSWITCH_APP} tune "$val"
+            done
+        else
+            # Not an array, treat as scalar
+            ${DVSWITCH_APP} tune "${ref}"
+        fi
+    }
+
+    # Handle unlinking for each mode
     case $current_mode in
         DMR)
-            ${DVSWITCH_APP} tune ${DMR_UNLINK}
+            tune_on_values DMR_UNLINK
             ;;
         DSTAR)
-            ${DVSWITCH_APP} tune ${DSTAR_UNLINK}
+            tune_on_values DSTAR_UNLINK
             ;;
         YSF|YSFN)
-            ${DVSWITCH_APP} tune ${YSF_UNLINK}
+            tune_on_values YSF_UNLINK
             ;;
         NXDN)
-            ${DVSWITCH_APP} tune ${NXDN_UNLINK}
+            tune_on_values NXDN_UNLINK
             ;;
         P25)
-            ${DVSWITCH_APP} tune ${P25_UNLINK}
+            tune_on_values P25_UNLINK
             ;;
         *)
             echo "WARNING: Unable to unlink unsupported mode: $current_mode"
-            echo "WARNING: Unable to unlink unsupported mode: $current_mode" >> $LOG_FILE
+            echo "WARNING: Unable to unlink unsupported mode: $current_mode" >> "$LOG_FILE"
+            return 1
             ;;
     esac
-    
-    echo Unlinked on mode $current_mode
-    echo "$(date): Unlinked on mode $current_mode" >> $LOG_FILE
+
+    echo "Unlinked on mode $current_mode"
+    echo "$(date): Unlinked on mode $current_mode" >> "$LOG_FILE"
 }
 
 # Disconnect and Unlink only when MODE and MASTER are both 0
