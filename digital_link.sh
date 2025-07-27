@@ -43,7 +43,7 @@ TG=${DTMF:2}             # Remaining digits (talkgroup ID)
 
 unlink_current_mode() {
     # Constants
-    DMR_UNLINK=4000
+    DMR_UNLINK=disconnect
     DSTAR_UNLINK=U
     YSF_UNLINK=4000
     NXDN_UNLINK=9999
@@ -74,8 +74,6 @@ unlink_current_mode() {
             ;;
     esac
     
-    ${DVSWITCH_APP} tune disconnect
-
     echo Unlinked on mode $current_mode
     echo "$(date): Unlinked on mode $current_mode" >> $LOG_FILE
 }
