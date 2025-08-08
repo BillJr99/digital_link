@@ -9,6 +9,7 @@ url=3102.master.brandmeister.network
 port=62031
 password=PASSWORD
 type=NA
+slot=2
 
 [DMR_TGIF]
 modemaster=12

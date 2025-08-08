@@ -185,6 +185,24 @@ TYPE=$(awk -v section="$SECTION" '
     in_section && $1 ~ /^type=/ { split($0, a, "="); print a[2]; exit }
 ' "$CONFIG_FILE")
 
+SLOT=$(awk -v section="$SECTION" '
+    $0 == section { in_section=1; next }
+    in_section && /^\[.*\]/ { exit }
+    in_section && $1 ~ /^slot=/ { split($0, a, "="); print a[2]; exit }
+' "$CONFIG_FILE")
+
+# Normalize and validate slot (DMR timeslot should be 1 or 2)
+if [[ -n "$SLOT" ]]; then
+    # Trim whitespace just in case
+    SLOT="$(echo "$SLOT" | tr -d '[:space:]')"
+    if [[ "$SLOT" != "1" && "$SLOT" != "2" ]]; then
+        echo "WARNING: Invalid slot '$SLOT' in $SECTION (expected 1 or 2). Ignoring." | tee -a "$LOG_FILE"
+        unset SLOT
+    else
+        echo "$(date): Parsed slot=$SLOT from $SECTION" >> "$LOG_FILE"
+    fi
+fi
+
 # Unlink current mode
 unlink_current_mode  
     
@@ -212,7 +230,14 @@ case $MODE in
         echo Executing: ${DVSWITCH_APP} tune "${PASSWORD}@${URL}:${PORT}" >> $LOG_FILE 
         ${DVSWITCH_APP} tune "${TG}" 
         echo Executing: ${DVSWITCH_APP} tune "${TG}"
-        echo Executing: ${DVSWITCH_APP} tune "${TG}" >> $LOG_FILE         
+        echo Executing: ${DVSWITCH_APP} tune "${TG}" >> $LOG_FILE        
+
+        # If slot was specified in the config section, set it now
+        if [[ -n "$SLOT" ]]; then
+            ${DVSWITCH_APP} slot "$SLOT"
+            echo Executing: ${DVSWITCH_APP} slot "$SLOT"
+            echo Executing: ${DVSWITCH_APP} slot "$SLOT" >> $LOG_FILE
+        fi
         ;;
     D-STAR)
         ${DVSWITCH_APP} mode DSTAR
